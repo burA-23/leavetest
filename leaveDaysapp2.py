@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime, timedelta
-
+# My first Monolithic app.
 app = Flask(__name__)
 
 # Simple in-memory data store for leave information
