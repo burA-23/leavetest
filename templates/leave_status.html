@@ -9,21 +9,23 @@
     <h1>Leave Status</h1>
     <table border="1">
         <tr>
-                <th>Username</th>
-		<th>Designation</th>
-		<th>Personal Number</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-		<th>Report Date</th>
+            <th>ID</>
+            <th>Username</th>
+		    <th>Designation</th>
+		    <th>Personal Number</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+		    <th>Report Date</th>
         </tr>
-        {% for username, data in leave_data.items() %}
+        {% for record in leave_data %}
             <tr>
-                <td>{{ username }}</td>
-                <td>{{ data.0 }}</td>
-		<td>{{ data.1 }}</td>
-		<td>{{ data.2 }}</td>
-                <td>{{ data.3 }}</td>
-                <td>{{ data.4 }}</td>
+                <td>{{ record[0]}}</td>
+                <td>{{record[1]}}</td>
+		        <td>{{record[2]}}</td>
+		        <td>{{record[3]}}</td>
+                <td>{{record[4]}}</td>
+                <td>{{record[5]}}</td>
+                <td>{{record[6]}}</td>
             </tr>
         {% endfor %}
     </table>

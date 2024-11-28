@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime, timedelta
+import dbexec
+
 # My first Monolithic app.
 app = Flask(__name__)
 
@@ -63,19 +65,28 @@ def leave_form():
         # Calculate the end date of leave considering weekends and holidays
         end_date = calculate_leave_end_date(start_date, leave_duration, holidays_dict)
         #Calculate the report date '"   "
-        report_date = calculate_report_date(end_date,holidays_dict) 
-        
+        report_date = calculate_report_date(end_date,holidays_dict)
+
+        # Insert data into the db
+        dbexec.insert_leave_request(
+                username, designation, personal_Number,
+                start_date.strftime("%Y-%m-%d"),
+                end_date.strftime("%Y-%m-%d"),
+                report_date.strftime("%Y-%m-%d")
+        )
+        return redirect(url_for('leave_status'))
 
         # Update leave_data dictionary
-        leave_data[username] =(designation,personal_Number,start_date.strftime("%Y/%m/%d"),end_date.strftime("%Y/%m/%d"),report_date.strftime("%Y/%m/%d")) # This worked.
+       # leave_data[username] =(designation,personal_Number,start_date.strftime("%Y/%m/%d"),end_date.strftime("%Y/%m/%d"),report_date.strftime("%Y/%m/%d")) # This worked.
         #{'PersonalNumber': personal_Number,'End date': end_date}- (This produced a bug about string formatting in relation to the datetime module.)
 
-        return render_template('leave_status.html', leave_data=leave_data)
+        #return render_template('leave_status.html', leave_data=leave_data)
 
     return render_template('leave_form.html')
 
 @app.route('/leave_status')
 def leave_status():
+    leave_data= dbexec.fetch_all_leave_requests()
     return render_template('leave_status.html',leave_data=leave_data)
 
 #@app.route('/Sick_leave',methods=['GET','POST'])
@@ -86,4 +97,5 @@ def leave_status():
        # pesrsonal_Number
 
 if __name__ == '__main__':
+    dbexec.initialize_db()
     app.run(host="0.0.0.0",port=8080,debug=True)
